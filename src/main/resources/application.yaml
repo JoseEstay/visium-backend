@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: backend
+
+  config:
+    import: "optional:file:.env[.properties]"
+
+  # Conexion a la base de datos PostgreSQL (contenedor Docker "visium-postgres")
+  datasource:
+    url: "${DB_URL:${URL}}"
+    username: "${DB_USERNAME:${USERNAME}}"
+    password: "${DB_PASSWORD:${PASSWORD}}"
+
+  jpa:
+    hibernate:
+      # "validate" = Hibernate revisa que las entidades coincidan con las tablas
+      # No crea ni modifica nada; manda el schema.sql
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+# Configuracion propia de VISIUM (JWT)
+visium:
+  jwt:
+    # Clave secreta para firmar tokens (en produccion debe ir en variable de entorno)
+    secret: "${JWT_SECRET}"
+    # Duracion del token: 24 horas (en milisegundos)
+    expiration-ms: 86400000
