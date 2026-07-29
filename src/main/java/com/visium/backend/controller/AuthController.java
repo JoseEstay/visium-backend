@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Endpoints de autenticacion.
  * POST /auth/login  -> publico
- * GET  /auth/me     -> requiere token
+ * GET  /auth/me     -> requiere token; opcional header X-Empresa-Id
  */
 @RestController
 @RequestMapping("/auth")

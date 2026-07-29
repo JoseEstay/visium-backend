@@ -7,8 +7,12 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Added
+- Claims JWT `roles`, `empresaIds`, `sucursalIds`
+- Respuestas `login` / `me` con alcance (`empresaIds`, `sucursalIds`, `empresaActivaId`)
+- Header `X-Empresa-Id` + `EmpresaContext` (empresa activa por request)
+
 ### Planeado
-- Contexto JWT con `empresaIds`, `sucursalIds` y header `X-Empresa-Id`
 - `AccesoService` y filtros por empresa/sucursal
 - Reemplazar `@PreAuthorize('ADMIN')` por `SUPER_ADMIN` / `JEFE` / `JEFE_SUCURSAL`
 - Migrar asignaciones legacy `ADMIN` → `JEFE` y eliminar el rol `ADMIN`
