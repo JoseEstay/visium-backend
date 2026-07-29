@@ -8,9 +8,7 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 ## [Unreleased]
 
 ### Planeado
-- Reemplazar `@PreAuthorize('ADMIN')` por `SUPER_ADMIN` / `JEFE` / `JEFE_SUCURSAL`
-- Migrar asignaciones legacy `ADMIN` → `JEFE` y eliminar el rol `ADMIN`
-- Pruebas Bruno de los 3 perfiles
+- Pruebas Bruno de los 3 perfiles (SUPER_ADMIN, JEFE multi-empresa, JEFE_SUCURSAL)
 - CRUD de citas, consultas y recetas
 - Dashboard
 
@@ -27,7 +25,7 @@ Versión del artefacto: `0.2.0-SNAPSHOT`.
 - Header `X-Empresa-Id` + `EmpresaContext` (empresa activa por request)
 - `AccesoService`: reglas de acceso por rol
   - `SUPER_ADMIN` → cualquier empresa
-  - `JEFE` / legacy `ADMIN` → solo sus empresas; todas las sucursales de cada una
+  - `JEFE` → solo sus empresas; todas las sucursales de cada una
   - `JEFE_SUCURSAL` (y roles con sucursales asignadas) → solo `usuarios_sucursales`
 - `ForbiddenException` (HTTP 403) en el handler global
 - Filtros de aislamiento en `EmpresaService`, `SucursalService`, `PacienteService`, `ProfesionalService`
@@ -37,11 +35,19 @@ Versión del artefacto: `0.2.0-SNAPSHOT`.
 ### Changed
 - Crear / desactivar empresa restringido a `SUPER_ADMIN` (lógica de negocio)
 - Crear / desactivar sucursales y registrar profesionales: `JEFE` o `SUPER_ADMIN`
-- Documentación: `docs/reglas-negocio.md`, `docs/PLAN-DE-TRABAJO.md`
+- `@PreAuthorize` actualizado: ya no usa `ADMIN`
+  - Empresas: crear/desactivar → `SUPER_ADMIN`; actualizar → `SUPER_ADMIN` | `JEFE`
+  - Sucursales / profesionales (mutaciones) → `SUPER_ADMIN` | `JEFE`
+  - Pacientes alta/edición → `SUPER_ADMIN` | `JEFE` | `JEFE_SUCURSAL` | `RECEPCIONISTA`
+  - Pacientes baja → `SUPER_ADMIN` | `JEFE` | `JEFE_SUCURSAL`
+- Documentación: `docs/reglas-negocio.md`, `docs/PLAN-DE-TRABAJO.md`, `README.md`
+
+### Removed
+- Rol legacy `ADMIN` (migración en `data.sql`: asignaciones → `JEFE`, luego delete del rol)
 
 ### Security
 - Un request no puede leer ni mutar datos de empresa/sucursal ajena (403)
-- `ADMIN` legacy sigue reconocido como jefe hasta migrar `@PreAuthorize` y el seed
+- Autorización en controllers alineada con la matriz de roles del producto
 
 ---
 

@@ -66,8 +66,8 @@ class AccesoServiceTest {
 	}
 
 	@Test
-	void adminLegacySeTrataComoJefe() {
-		autenticar(roles("ADMIN"), List.of(EMPRESA_A), List.of(SUCURSAL_A1));
+	void jefeVeTodasLasSucursalesAunqueTengaListaEnJwt() {
+		autenticar(roles("JEFE"), List.of(EMPRESA_A), List.of(SUCURSAL_A1));
 
 		assertTrue(accesoService.esJefeDeEmpresa());
 		assertFalse(accesoService.tieneAlcanceSoloSucursalesAsignadas());

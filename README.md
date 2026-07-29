@@ -58,7 +58,7 @@ BUILD SUCCESS
 |---|---|---|---|
 | 1 | `SUPER_ADMIN` accede a cualquier empresa | Permitido; listado sin filtro de empresas | OK |
 | 2 | `JEFE` solo accede a sus empresas (A, B); rechaza empresa C | `ForbiddenException` en C | OK |
-| 3 | Rol legacy `ADMIN` se trata como jefe | Ve todas las sucursales de su empresa | OK |
+| 3 | Rol `JEFE` ve todas las sucursales aunque el JWT liste alguna | Sin filtro de sucursal | OK |
 | 4 | `JEFE_SUCURSAL` solo ve sucursales asignadas | OK en A1; 403 en A2 | OK |
 | 5 | `JEFE` ve todas las sucursales de su empresa | Sin filtro de sucursal | OK |
 | 6 | `JEFE` multi-empresa sin header / sin contexto | `BadRequestException` | OK |

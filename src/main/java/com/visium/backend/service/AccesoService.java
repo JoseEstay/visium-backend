@@ -29,10 +29,9 @@ public class AccesoService {
 		return usuarioActual().esSuperAdmin();
 	}
 
-	/** JEFE (dueño de óptica) o legacy ADMIN hasta migrar. */
+	/** JEFE = dueño de óptica. */
 	public boolean esJefeDeEmpresa() {
-		List<String> roles = usuarioActual().getRoles();
-		return roles.contains("JEFE") || roles.contains("ADMIN");
+		return usuarioActual().getRoles().contains("JEFE");
 	}
 
 	/**

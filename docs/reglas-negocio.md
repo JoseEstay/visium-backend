@@ -13,7 +13,7 @@
 | Código | Quién | Alcance |
 |---|---|---|
 | `SUPER_ADMIN` | Dueños de Visium (plataforma) | Puede entrar a **cualquier** empresa/sucursal para soporte. Puede desactivar empresas o sucursales (ej. no pagan). No es el dueño operativo de las ópticas clientes. |
-| `JEFE` | Dueño de una o varias ópticas (antes `ADMIN`) | Solo las empresas **suyas** (`usuarios_empresas`). Dentro de cada una ve **todas** sus sucursales. Si tiene Óptica A y B, él ve ambas; el personal de A no ve B. No puede tocar empresas ajenas. |
+| `JEFE` | Dueño de una o varias ópticas (reemplaza al antiguo `ADMIN`) | Solo las empresas **suyas** (`usuarios_empresas`). Dentro de cada una ve **todas** sus sucursales. Si tiene Óptica A y B, él ve ambas; el personal de A no ve B. No puede tocar empresas ajenas. |
 | `JEFE_SUCURSAL` | Jefe de una sucursal | Trabaja para una empresa, pero solo ve/gestiona sucursales asignadas en `usuarios_sucursales`. |
 | `RECEPCIONISTA` | Operación | Su empresa (pacientes, citas). No administra personal ni sucursales. |
 | `PROFESIONAL` | Clínico | Su empresa + sucursales asignadas. Consultas y recetas. |
