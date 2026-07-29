@@ -10,12 +10,11 @@ import com.visium.backend.mapper.PacienteMapper;
 import com.visium.backend.repository.EmpresaRepository;
 import com.visium.backend.repository.FichaClinicaRepository;
 import com.visium.backend.repository.PacienteRepository;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,30 +24,33 @@ public class PacienteService {
 	private final EmpresaRepository empresaRepository;
 	private final FichaClinicaRepository fichaClinicaRepository;
 	private final PacienteMapper pacienteMapper;
+	private final AccesoService accesoService;
 
 	@Transactional(readOnly = true)
 	public List<PacienteResponse> listarPorEmpresa(UUID empresaId) {
-		verificarEmpresa(empresaId);
-		return pacienteRepository.findByEmpresaId(empresaId).stream()
+		UUID empresa = accesoService.resolverEmpresaObjetivo(empresaId);
+		return pacienteRepository.findByEmpresaId(empresa).stream()
 				.map(pacienteMapper::toResponse)
 				.toList();
 	}
 
 	@Transactional(readOnly = true)
 	public PacienteResponse obtenerPorId(UUID id) {
-		return pacienteMapper.toResponse(buscarOFallar(id));
+		Paciente paciente = buscarOFallar(id);
+		accesoService.exigirAccesoEmpresa(paciente.getEmpresa().getId());
+		return pacienteMapper.toResponse(paciente);
 	}
 
 	@Transactional
 	public PacienteResponse crear(PacienteRequest request) {
-		Empresa empresa = verificarEmpresa(request.getEmpresaId());
+		UUID empresaId = accesoService.resolverEmpresaObjetivo(request.getEmpresaId());
+		Empresa empresa = verificarEmpresa(empresaId);
 		Paciente paciente = pacienteMapper.toEntity(request, empresa);
 		if (paciente.getActivo() == null) {
 			paciente.setActivo(true);
 		}
 		paciente = pacienteRepository.save(paciente);
 
-		// Cada paciente nuevo nace con una ficha clinica vacia
 		FichaClinica ficha = new FichaClinica();
 		ficha.setPaciente(paciente);
 		fichaClinicaRepository.save(ficha);
@@ -59,7 +61,9 @@ public class PacienteService {
 	@Transactional
 	public PacienteResponse actualizar(UUID id, PacienteRequest request) {
 		Paciente paciente = buscarOFallar(id);
-		Empresa empresa = verificarEmpresa(request.getEmpresaId());
+		accesoService.exigirAccesoEmpresa(paciente.getEmpresa().getId());
+		UUID empresaId = accesoService.resolverEmpresaObjetivo(request.getEmpresaId());
+		Empresa empresa = verificarEmpresa(empresaId);
 		paciente.setEmpresa(empresa);
 		pacienteMapper.aplicar(paciente, request);
 		return pacienteMapper.toResponse(pacienteRepository.save(paciente));
@@ -68,6 +72,7 @@ public class PacienteService {
 	@Transactional
 	public void desactivar(UUID id) {
 		Paciente paciente = buscarOFallar(id);
+		accesoService.exigirAccesoEmpresa(paciente.getEmpresa().getId());
 		paciente.setActivo(false);
 		pacienteRepository.save(paciente);
 	}

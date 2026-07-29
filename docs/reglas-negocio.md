@@ -46,6 +46,7 @@
 - `POST /auth/login` y `GET /auth/me` devuelven `empresaIds`, `sucursalIds` y `empresaActivaId` (sugerida o la del header).
 - El JWT incluye claims `roles`, `empresaIds` y `sucursalIds`.
 - Los datos de la empresa A nunca se mezclan con los de la empresa B para recepcionistas, profesionales ni jefes de sucursal.
+- En código: `AccesoService` valida empresa/sucursal en cada operación de negocio (403 si es ajena).
 
 ---
 

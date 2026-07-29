@@ -7,17 +7,41 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
-### Added
-- Claims JWT `roles`, `empresaIds`, `sucursalIds`
-- Respuestas `login` / `me` con alcance (`empresaIds`, `sucursalIds`, `empresaActivaId`)
-- Header `X-Empresa-Id` + `EmpresaContext` (empresa activa por request)
-
 ### Planeado
-- `AccesoService` y filtros por empresa/sucursal
 - Reemplazar `@PreAuthorize('ADMIN')` por `SUPER_ADMIN` / `JEFE` / `JEFE_SUCURSAL`
 - Migrar asignaciones legacy `ADMIN` → `JEFE` y eliminar el rol `ADMIN`
+- Pruebas Bruno de los 3 perfiles
 - CRUD de citas, consultas y recetas
-- Dashboard y tests
+- Dashboard
+
+---
+
+## [0.2.0] - 2026-07-29
+
+Aislamiento multi-empresa / multi-sucursal en código (rama `desarrollo-backend`).
+Versión del artefacto: `0.2.0-SNAPSHOT`.
+
+### Added
+- Claims JWT: `roles`, `empresaIds`, `sucursalIds`
+- `POST /auth/login` y `GET /auth/me` devuelven `empresaIds`, `sucursalIds`, `empresaActivaId`
+- Header `X-Empresa-Id` + `EmpresaContext` (empresa activa por request)
+- `AccesoService`: reglas de acceso por rol
+  - `SUPER_ADMIN` → cualquier empresa
+  - `JEFE` / legacy `ADMIN` → solo sus empresas; todas las sucursales de cada una
+  - `JEFE_SUCURSAL` (y roles con sucursales asignadas) → solo `usuarios_sucursales`
+- `ForbiddenException` (HTTP 403) en el handler global
+- Filtros de aislamiento en `EmpresaService`, `SucursalService`, `PacienteService`, `ProfesionalService`
+- Tests unitarios de `AccesoService` (sin BD): `.\mvnw.cmd test`
+- Smoke `BackendApplicationTests` (contexto Spring + PostgreSQL vía `.env` / Docker)
+
+### Changed
+- Crear / desactivar empresa restringido a `SUPER_ADMIN` (lógica de negocio)
+- Crear / desactivar sucursales y registrar profesionales: `JEFE` o `SUPER_ADMIN`
+- Documentación: `docs/reglas-negocio.md`, `docs/PLAN-DE-TRABAJO.md`
+
+### Security
+- Un request no puede leer ni mutar datos de empresa/sucursal ajena (403)
+- `ADMIN` legacy sigue reconocido como jefe hasta migrar `@PreAuthorize` y el seed
 
 ---
 
@@ -69,5 +93,6 @@ Primera versión versionada del backend VISIUM (rama `desarrollo-backend`).
 - `0.3.x` — flujo clínico (citas, consultas, recetas)
 - `1.0.0` — MVP listo para clientes
 
-[Unreleased]: https://github.com/JulioJulioso/visium-backend/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/JulioJulioso/visium-backend/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/JulioJulioso/visium-backend/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/JulioJulioso/visium-backend/releases/tag/v0.1.0
