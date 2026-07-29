@@ -81,7 +81,7 @@ El historial de versiones está en [`CHANGELOG.md`](../CHANGELOG.md) (versión a
 | 2 | Entidades JPA y repositorios para las 13 tablas | Hecho |
 | 3 | Seguridad: login con JWT, roles y CORS para el frontend | Hecho |
 | 4 | CRUD de administración: empresas, sucursales, usuarios, profesionales | Hecho |
-| 4b | Roles SUPER_ADMIN / JEFE / JEFE_SUCURSAL + aislamiento por empresa/sucursal | Hecho (falta Bruno de perfiles) |
+| 4b | Roles SUPER_ADMIN / JEFE / JEFE_SUCURSAL + aislamiento por empresa/sucursal | Hecho |
 | 5 | CRUD clínico: pacientes, citas (con validaciones), consultas y recetas | Parcial (pacientes) |
 | 6 | Manejo de errores global y endpoint de dashboard | Pendiente |
 | 7 | Tests básicos, README con instrucciones y ROADMAP | Pendiente |

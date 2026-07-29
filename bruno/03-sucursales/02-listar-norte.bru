@@ -1,0 +1,24 @@
+meta {
+  name: 02 Listar sucursales Norte (JEFE con header)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/sucursales?empresaId={{empresaNorteId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+headers {
+  X-Empresa-Id: {{empresaNorteId}}
+}
+
+docs {
+  Login como JEFE primero. Con X-Empresa-Id=Norte debe listar Sucursal Norte.
+  JEFE_SUCURSAL debe recibir 403.
+}

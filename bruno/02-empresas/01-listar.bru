@@ -1,0 +1,19 @@
+meta {
+  name: 01 Listar empresas
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/empresas/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  SUPER_ADMIN: todas. JEFE: solo las suyas. JEFE_SUCURSAL: solo Demo.
+}

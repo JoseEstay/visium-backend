@@ -1,0 +1,35 @@
+meta {
+  name: 03 Login JEFE_SUCURSAL
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "jsucursal@visium.cl",
+    "password": "admin123"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("token", res.body.token);
+    if (res.body.empresaIds && res.body.empresaIds.length >= 1) {
+      bru.setEnvVar("empresaDemoId", res.body.empresaIds[0]);
+    }
+  }
+}
+
+docs {
+  Solo Casa Matriz. Esperado: roles JEFE_SUCURSAL; sucursalIds con 1 id.
+}

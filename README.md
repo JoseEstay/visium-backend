@@ -79,3 +79,32 @@ BUILD SUCCESS
 ## Cómo versionar
 
 Ver [`CHANGELOG.md`](CHANGELOG.md). Convención: `0.2.x` = aislamiento real por roles/empresa en código.
+
+## Pruebas de perfiles (Bruno / API) — v0.2.0
+
+Colección: carpeta [`bruno/`](bruno/). Seed: [`scripts/seed-perfiles-demo.sql`](scripts/seed-perfiles-demo.sql).
+
+| Email | Password | Rol |
+|---|---|---|
+| `super@visium.cl` | `admin123` | SUPER_ADMIN |
+| `jefe@visium.cl` | `admin123` | JEFE (Demo + Norte) |
+| `jsucursal@visium.cl` | `admin123` | JEFE_SUCURSAL (solo Casa Matriz) |
+
+### Resultado verificación API (2026-07-29)
+
+```
+TOTAL: 10  PASS: 10  FAIL: 0
+```
+
+| Caso | Resultado |
+|---|---|
+| SUPER_ADMIN login | PASS |
+| SUPER_ADMIN lista todas las empresas (≥2) | PASS |
+| JEFE login con 2 empresas | PASS |
+| JEFE ve Demo y Norte | PASS |
+| JEFE lista 2 sucursales en Demo | PASS |
+| JEFE lista sucursales en Norte con `X-Empresa-Id` | PASS |
+| JEFE empresa ajena → 403 | PASS |
+| JEFE_SUCURSAL login (1 sucursal) | PASS |
+| JEFE_SUCURSAL solo Casa Matriz | PASS |
+| JEFE_SUCURSAL pide Norte → 403 | PASS |

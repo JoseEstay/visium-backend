@@ -1,0 +1,23 @@
+meta {
+  name: 04 Me
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/auth/me
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+headers {
+  X-Empresa-Id: {{empresaDemoId}}
+}
+
+docs {
+  Con token + X-Empresa-Id. Esperado: empresaActivaId = Demo.
+}

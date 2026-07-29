@@ -8,7 +8,6 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 ## [Unreleased]
 
 ### Planeado
-- Pruebas Bruno de los 3 perfiles (SUPER_ADMIN, JEFE multi-empresa, JEFE_SUCURSAL)
 - CRUD de citas, consultas y recetas
 - Dashboard
 
@@ -31,6 +30,8 @@ Versión del artefacto: `0.2.0-SNAPSHOT`.
 - Filtros de aislamiento en `EmpresaService`, `SucursalService`, `PacienteService`, `ProfesionalService`
 - Tests unitarios de `AccesoService` (sin BD): `.\mvnw.cmd test`
 - Smoke `BackendApplicationTests` (contexto Spring + PostgreSQL vía `.env` / Docker)
+- Colección Bruno en `bruno/` + seed `scripts/seed-perfiles-demo.sql`
+- Verificación API de 3 perfiles (2026-07-29): **10/10 PASS**
 
 ### Changed
 - Crear / desactivar empresa restringido a `SUPER_ADMIN` (lógica de negocio)
@@ -48,6 +49,7 @@ Versión del artefacto: `0.2.0-SNAPSHOT`.
 ### Security
 - Un request no puede leer ni mutar datos de empresa/sucursal ajena (403)
 - Autorización en controllers alineada con la matriz de roles del producto
+- Confirmado por API: SUPER_ADMIN ve todo; JEFE multi-empresa no cruza sin header; JEFE_SUCURSAL solo Casa Matriz
 
 ---
 

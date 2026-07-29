@@ -1,0 +1,24 @@
+meta {
+  name: 01 Listar sucursales Demo
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/sucursales?empresaId={{empresaDemoId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+headers {
+  X-Empresa-Id: {{empresaDemoId}}
+}
+
+docs {
+  JEFE / SUPER_ADMIN: Casa Matriz + Sucursal Sur.
+  JEFE_SUCURSAL: solo Casa Matriz.
+}

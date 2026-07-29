@@ -1,0 +1,36 @@
+meta {
+  name: 02 Login JEFE multi-empresa
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "jefe@visium.cl",
+    "password": "admin123"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("token", res.body.token);
+    if (res.body.empresaIds && res.body.empresaIds.length >= 2) {
+      bru.setEnvVar("empresaDemoId", res.body.empresaIds[0]);
+      bru.setEnvVar("empresaNorteId", res.body.empresaIds[1]);
+    }
+  }
+}
+
+docs {
+  Dueño de Demo + Norte. Esperado: 2 empresaIds; empresaActivaId null sin header.
+}
