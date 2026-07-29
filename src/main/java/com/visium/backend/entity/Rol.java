@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Representa un rol del sistema: ADMIN, RECEPCIONISTA o PROFESIONAL.
+ * Representa un rol del sistema.
+ * Codigos: SUPER_ADMIN, JEFE, JEFE_SUCURSAL, RECEPCIONISTA, PROFESIONAL.
  * Tabla: roles
  */
 @Entity

@@ -72,6 +72,8 @@ Regla simple: **una petición siempre viaja así**:
 
 Se avanza fase por fase. Una fase no se empieza hasta que la anterior compila y está probada.
 
+El historial de versiones está en [`CHANGELOG.md`](../CHANGELOG.md) (versión actual del artefacto: `0.1.0-SNAPSHOT` en `pom.xml`).
+
 | Fase | Qué se hace | Estado |
 |---|---|---|
 | 0 | Rama `desarrollo-backend` y este documento | Hecho |
@@ -79,6 +81,7 @@ Se avanza fase por fase. Una fase no se empieza hasta que la anterior compila y 
 | 2 | Entidades JPA y repositorios para las 13 tablas | Hecho |
 | 3 | Seguridad: login con JWT, roles y CORS para el frontend | Hecho |
 | 4 | CRUD de administración: empresas, sucursales, usuarios, profesionales | Hecho |
+| 4b | Roles SUPER_ADMIN / JEFE / JEFE_SUCURSAL + aislamiento por empresa/sucursal | En curso (docs + data.sql) |
 | 5 | CRUD clínico: pacientes, citas (con validaciones), consultas y recetas | Parcial (pacientes) |
 | 6 | Manejo de errores global y endpoint de dashboard | Pendiente |
 | 7 | Tests básicos, README con instrucciones y ROADMAP | Pendiente |

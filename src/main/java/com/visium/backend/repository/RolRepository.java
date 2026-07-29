@@ -10,6 +10,6 @@ import java.util.Optional;
  */
 public interface RolRepository extends JpaRepository<Rol, Short> {
 
-	// Busca un rol por su codigo, ejemplo: "ADMIN"
+	// Busca un rol por su codigo, ejemplo: "JEFE"
 	Optional<Rol> findByCodigo(String codigo);
 }

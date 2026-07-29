@@ -13,14 +13,20 @@ spring:
 
   jpa:
     hibernate:
-      # "validate" = Hibernate revisa que las entidades coincidan con las tablas
-      # No crea ni modifica nada; manda el schema.sql
+      # "update" = Hibernate ajusta tablas; data.sql carga roles
       ddl-auto: update
+    # Permite ejecutar data.sql despues de que existan las tablas
+    defer-datasource-initialization: true
     open-in-view: false
     properties:
       hibernate:
         jdbc:
           time_zone: UTC
+
+  # Carga data.sql (roles) en cada arranque; los INSERT usan ON CONFLICT
+  sql:
+    init:
+      mode: always
 
 # Configuracion propia de VISIUM (JWT)
 visium:

@@ -8,7 +8,9 @@ Los usuarios que ingresan al sistema se almacenan en la tabla `usuarios`.
 
 Los distintos tipos de usuario se determinan mediante roles:
 
-- `ADMIN`
+- `SUPER_ADMIN` — Dueños de Visium (plataforma / soporte)
+- `JEFE` — Dueño de una o varias ópticas (antes `ADMIN`)
+- `JEFE_SUCURSAL` — Jefe de una sucursal (solo sus sucursales)
 - `RECEPCIONISTA`
 - `PROFESIONAL`
 
@@ -23,8 +25,14 @@ Los profesionales sí poseen una tabla separada porque necesitan información es
 Por lo tanto:
 
 ```text
-Administrador
-└── Usuario + rol ADMIN
+Dueño Visium
+└── Usuario + rol SUPER_ADMIN
+
+Dueño de óptica(s)
+└── Usuario + rol JEFE (+ pertenencia en una o varias empresas)
+
+Jefe de sucursal
+└── Usuario + rol JEFE_SUCURSAL (+ usuarios_sucursales)
 
 Recepcionista
 └── Usuario + rol RECEPCIONISTA
@@ -202,7 +210,8 @@ Esto permite que una persona pueda pertenecer a más de una empresa.
 
 Ejemplo:
 ```text
-Matías → ADMIN en Óptica A
+Matías → JEFE en Óptica A y Óptica B (ve ambas; el personal de A no ve B)
+Ana → JEFE_SUCURSAL solo en Sucursal Centro de Óptica A
 Matías → PROFESIONAL en Óptica B
 ```
 
@@ -220,7 +229,9 @@ Roles iniciales:
 
 | Código | Nombre |
 |---|---|
-| `ADMIN` | Administrador |
+| `SUPER_ADMIN` | Dueño Visium (plataforma) |
+| `JEFE` | Jefe / Dueño de óptica |
+| `JEFE_SUCURSAL` | Jefe de sucursal |
 | `RECEPCIONISTA` | Recepcionista |
 | `PROFESIONAL` | Profesional |
 
@@ -1114,7 +1125,9 @@ CREATE TABLE recetas_opticas_detalles (
 ```sql
 INSERT INTO roles (codigo, nombre)
 VALUES
-    ('ADMIN', 'Administrador'),
+    ('SUPER_ADMIN', 'Dueño Visium (plataforma)'),
+    ('JEFE', 'Jefe / Dueño de optica'),
+    ('JEFE_SUCURSAL', 'Jefe de sucursal'),
     ('RECEPCIONISTA', 'Recepcionista'),
     ('PROFESIONAL', 'Profesional')
 ON CONFLICT (codigo) DO NOTHING;

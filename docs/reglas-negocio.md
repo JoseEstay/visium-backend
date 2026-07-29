@@ -6,6 +6,45 @@
 - Un usuario puede tener varios roles dentro de una empresa.
 - Los roles deben verificarse en Spring Security.
 - El rol no reemplaza la información específica de un profesional.
+- Hay **una sola base de datos**; el aislamiento es por `empresa_id` (y sucursal cuando aplique).
+
+### Roles del sistema
+
+| Código | Quién | Alcance |
+|---|---|---|
+| `SUPER_ADMIN` | Dueños de Visium (plataforma) | Puede entrar a **cualquier** empresa/sucursal para soporte. Puede desactivar empresas o sucursales (ej. no pagan). No es el dueño operativo de las ópticas clientes. |
+| `JEFE` | Dueño de una o varias ópticas (antes `ADMIN`) | Solo las empresas **suyas** (`usuarios_empresas`). Dentro de cada una ve **todas** sus sucursales. Si tiene Óptica A y B, él ve ambas; el personal de A no ve B. No puede tocar empresas ajenas. |
+| `JEFE_SUCURSAL` | Jefe de una sucursal | Trabaja para una empresa, pero solo ve/gestiona sucursales asignadas en `usuarios_sucursales`. |
+| `RECEPCIONISTA` | Operación | Su empresa (pacientes, citas). No administra personal ni sucursales. |
+| `PROFESIONAL` | Clínico | Su empresa + sucursales asignadas. Consultas y recetas. |
+
+### Diferencia SUPER_ADMIN vs JEFE
+
+- `SUPER_ADMIN` = dueños de **Visium**. Poder global de soporte y corte de servicio.
+- `JEFE` = dueño de **ópticas clientes**. Poder solo sobre empresas donde tiene pertenencia.
+
+### Matriz de permisos (resumen)
+
+| Acción | SUPER_ADMIN | JEFE | JEFE_SUCURSAL | RECEPCIONISTA | PROFESIONAL |
+|---|---|---|---|---|---|
+| Ver / gestionar cualquier empresa | Sí | No | No | No | No |
+| Cortar servicio (empresa/sucursal no paga) | Sí | No | No | No | No |
+| Gestionar sus empresas | — | Sí | No | No | No |
+| Ver todas las sucursales de su empresa | Sí | Sí | No | No | No |
+| Ver solo sucursales asignadas | — | — | Sí | Si aplica | Si aplica |
+| Contratar / despedir / editar roles en su empresa | Sí | Sí | Limitado* | No | No |
+| Pacientes / citas | Soporte | Sí | Sí (su alcance) | Sí | Ver / atender |
+| Consultas / recetas | Soporte | Ver | Ver | No | Sí |
+
+\*Un `JEFE_SUCURSAL` puede gestionar personal de **su** sucursal si el producto lo habilita; no administra toda la óptica.
+
+### Multi-empresa (dueño de varias ópticas)
+
+- Un `JEFE` puede tener varias filas en `usuarios_empresas`.
+- Debe trabajar con una **empresa activa** por request (header `X-Empresa-Id` cuando tenga más de una).
+- Los datos de la empresa A nunca se mezclan con los de la empresa B para recepcionistas, profesionales ni jefes de sucursal.
+
+---
 
 ## Profesionales
 
