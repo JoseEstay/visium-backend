@@ -1,7 +1,6 @@
 -- Datos iniciales de roles VISIUM.
 -- Se ejecuta al arrancar (ver application.yaml: spring.sql.init).
 
--- Roles actuales del sistema
 INSERT INTO roles (codigo, nombre)
 VALUES
     ('SUPER_ADMIN', 'Dueño Visium (plataforma)'),
@@ -11,8 +10,18 @@ VALUES
     ('PROFESIONAL', 'Profesional')
 ON CONFLICT (codigo) DO NOTHING;
 
--- TEMPORAL: se mantiene ADMIN hasta actualizar los @PreAuthorize del codigo.
--- Despues de eso, migrar asignaciones ADMIN -> JEFE y borrar ADMIN.
-INSERT INTO roles (codigo, nombre)
-VALUES ('ADMIN', 'Administrador (legacy)')
-ON CONFLICT (codigo) DO NOTHING;
+-- Migracion one-shot: asignaciones legacy ADMIN -> JEFE, luego elimina el rol ADMIN.
+UPDATE usuarios_empresas_roles uer
+SET rol_id = (SELECT id FROM roles WHERE codigo = 'JEFE')
+WHERE rol_id = (SELECT id FROM roles WHERE codigo = 'ADMIN')
+  AND NOT EXISTS (
+      SELECT 1
+      FROM usuarios_empresas_roles x
+      WHERE x.usuario_empresa_id = uer.usuario_empresa_id
+        AND x.rol_id = (SELECT id FROM roles WHERE codigo = 'JEFE')
+  );
+
+DELETE FROM usuarios_empresas_roles
+WHERE rol_id = (SELECT id FROM roles WHERE codigo = 'ADMIN');
+
+DELETE FROM roles WHERE codigo = 'ADMIN';

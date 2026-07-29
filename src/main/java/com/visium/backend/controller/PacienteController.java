@@ -4,6 +4,8 @@ import com.visium.backend.dto.paciente.PacienteRequest;
 import com.visium.backend.dto.paciente.PacienteResponse;
 import com.visium.backend.service.PacienteService;
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.UUID;
-
+/**
+ * Endpoints de pacientes.
+ * Alta/edicion: roles operativos de la optica. Baja: jefatura / plataforma.
+ */
 @RestController
 @RequestMapping("/pacientes")
 @RequiredArgsConstructor
@@ -39,13 +42,13 @@ public class PacienteController {
 	}
 
 	@PostMapping
-	@PreAuthorize("hasAnyRole('ADMIN', 'RECEPCIONISTA')")
+	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'JEFE', 'JEFE_SUCURSAL', 'RECEPCIONISTA')")
 	public ResponseEntity<PacienteResponse> crear(@Valid @RequestBody PacienteRequest request) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(pacienteService.crear(request));
 	}
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasAnyRole('ADMIN', 'RECEPCIONISTA')")
+	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'JEFE', 'JEFE_SUCURSAL', 'RECEPCIONISTA')")
 	public ResponseEntity<PacienteResponse> actualizar(
 			@PathVariable UUID id,
 			@Valid @RequestBody PacienteRequest request
@@ -54,7 +57,7 @@ public class PacienteController {
 	}
 
 	@DeleteMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'JEFE', 'JEFE_SUCURSAL')")
 	public ResponseEntity<Void> desactivar(@PathVariable UUID id) {
 		pacienteService.desactivar(id);
 		return ResponseEntity.noContent().build();

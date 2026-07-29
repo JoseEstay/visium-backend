@@ -19,41 +19,44 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** Endpoints de empresas. Crear / actualizar / desactivar: solo ADMIN. */
+/**
+ * Endpoints de empresas.
+ * Crear / desactivar: SUPER_ADMIN. Actualizar: SUPER_ADMIN o JEFE (AccesoService limita alcance).
+ */
 @RestController
 @RequestMapping("/empresas")
 @RequiredArgsConstructor
 public class EmpresaController {
 
-  private final EmpresaService empresaService;
+	private final EmpresaService empresaService;
 
-  @GetMapping("/")
-  public ResponseEntity<List<EmpresaResponse>> listar() {
-    return ResponseEntity.ok(empresaService.listar());
-  }
+	@GetMapping("/")
+	public ResponseEntity<List<EmpresaResponse>> listar() {
+		return ResponseEntity.ok(empresaService.listar());
+	}
 
-  @GetMapping("/{id}")
-  public ResponseEntity<EmpresaResponse> obtener(@PathVariable UUID id) {
-    return ResponseEntity.ok(empresaService.obtenerPorId(id));
-  }
+	@GetMapping("/{id}")
+	public ResponseEntity<EmpresaResponse> obtener(@PathVariable UUID id) {
+		return ResponseEntity.ok(empresaService.obtenerPorId(id));
+	}
 
-  @PostMapping
-  @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<EmpresaResponse> crear(@Valid @RequestBody EmpresaRequest request) {
-    return ResponseEntity.status(HttpStatus.CREATED).body(empresaService.crear(request));
-  }
+	@PostMapping
+	@PreAuthorize("hasRole('SUPER_ADMIN')")
+	public ResponseEntity<EmpresaResponse> crear(@Valid @RequestBody EmpresaRequest request) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(empresaService.crear(request));
+	}
 
-  @PutMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<EmpresaResponse> actualizar(
-      @PathVariable UUID id, @Valid @RequestBody EmpresaRequest request) {
-    return ResponseEntity.ok(empresaService.actualizar(id, request));
-  }
+	@PutMapping("/{id}")
+	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'JEFE')")
+	public ResponseEntity<EmpresaResponse> actualizar(
+			@PathVariable UUID id, @Valid @RequestBody EmpresaRequest request) {
+		return ResponseEntity.ok(empresaService.actualizar(id, request));
+	}
 
-  @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<Void> desactivar(@PathVariable UUID id) {
-    empresaService.desactivar(id);
-    return ResponseEntity.noContent().build();
-  }
+	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('SUPER_ADMIN')")
+	public ResponseEntity<Void> desactivar(@PathVariable UUID id) {
+		empresaService.desactivar(id);
+		return ResponseEntity.noContent().build();
+	}
 }

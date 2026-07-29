@@ -26,7 +26,7 @@ public class Rol {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Short id;
 
-	// Codigo que usa Spring Security, ejemplo: ADMIN
+	// Codigo que usa Spring Security, ejemplo: JEFE
 	@Column(nullable = false, unique = true, length = 50)
 	private String codigo;
 

@@ -4,6 +4,8 @@ import com.visium.backend.dto.sucursal.SucursalRequest;
 import com.visium.backend.dto.sucursal.SucursalResponse;
 import com.visium.backend.service.SucursalService;
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.UUID;
-
+/**
+ * Endpoints de sucursales.
+ * Mutaciones: SUPER_ADMIN o JEFE. JEFE_SUCURSAL solo lee las suyas (AccesoService).
+ */
 @RestController
 @RequestMapping("/sucursales")
 @RequiredArgsConstructor
@@ -39,13 +42,13 @@ public class SucursalController {
 	}
 
 	@PostMapping
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'JEFE')")
 	public ResponseEntity<SucursalResponse> crear(@Valid @RequestBody SucursalRequest request) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(sucursalService.crear(request));
 	}
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'JEFE')")
 	public ResponseEntity<SucursalResponse> actualizar(
 			@PathVariable UUID id,
 			@Valid @RequestBody SucursalRequest request
@@ -54,7 +57,7 @@ public class SucursalController {
 	}
 
 	@DeleteMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'JEFE')")
 	public ResponseEntity<Void> desactivar(@PathVariable UUID id) {
 		sucursalService.desactivar(id);
 		return ResponseEntity.noContent().build();
