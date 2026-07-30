@@ -5,6 +5,19 @@ spring:
   config:
     import: "optional:file:.env[.properties]"
 
+  # Email con Resend
+mail:
+  host: smtp.resend.com
+  port: 587
+  username: "resend" # OJO: El usuario siempre es literalmente la palabra "resend"
+  password: "${RESEND_API_KEY}"
+  properties:
+    mail:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+
   # Conexion a la base de datos PostgreSQL (contenedor Docker "visium-postgres")
   datasource:
     url: "${DB_URL:${URL}}"
