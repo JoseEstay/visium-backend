@@ -27,12 +27,25 @@ public class RecetaPdfService {
             PdfWriter.getInstance(document, out);
             document.open();
 
-            // Título
+            // ==========================================
+            // 1. DATOS DINÁMICOS (EMPRESA Y SUCURSAL)
+            // ==========================================
+            String nombreEmpresa = receta.getConsulta().getCita().getSucursal().getEmpresa().getRazonSocial();
+            String nombreSucursal = receta.getConsulta().getCita().getSucursal().getNombre();
+
+            // Título Principal (La Empresa)
             Font fontTitulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-            Paragraph titulo = new Paragraph("Receta Óptica - VISIUM", fontTitulo);
+            Paragraph titulo = new Paragraph("Receta Óptica - " + nombreEmpresa, fontTitulo);
             titulo.setAlignment(Element.ALIGN_CENTER);
-            titulo.setSpacingAfter(20);
             document.add(titulo);
+
+            // Subtítulo (La Sucursal)
+            Font fontSubtitulo = FontFactory.getFont(FontFactory.HELVETICA, 12);
+            Paragraph subtitulo = new Paragraph("Emitida en: " + nombreSucursal, fontSubtitulo);
+            subtitulo.setAlignment(Element.ALIGN_CENTER);
+            subtitulo.setSpacingAfter(20); // Espacio antes de los datos del paciente
+            document.add(subtitulo);
+            // ==========================================
 
             // Datos del Paciente (obtenidos a través de la Cita)
             String nombrePaciente = receta.getConsulta().getCita().getPaciente().getNombre() + " " +
