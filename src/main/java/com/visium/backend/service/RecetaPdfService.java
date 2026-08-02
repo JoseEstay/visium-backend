@@ -30,7 +30,7 @@ public class RecetaPdfService {
             // ==========================================
             // 1. DATOS DINÁMICOS (EMPRESA Y SUCURSAL)
             // ==========================================
-            String nombreEmpresa = receta.getConsulta().getCita().getSucursal().getEmpresa().getRazonSocial();
+            String nombreEmpresa = receta.getConsulta().getCita().getEmpresa().getRazonSocial();
             String nombreSucursal = receta.getConsulta().getCita().getSucursal().getNombre();
 
             // Título Principal (La Empresa)
