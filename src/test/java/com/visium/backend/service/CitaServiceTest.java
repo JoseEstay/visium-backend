@@ -93,6 +93,27 @@ class CitaServiceTest {
 	}
 
 	@Test
+	void listaCitasConfirmadasSinFiltroDeFechas() {
+		UsuarioDetails detalles = autenticar(roles("JEFE"), List.of(EMPRESA_ID), List.of());
+		when(accesoService.usuarioActual()).thenReturn(detalles);
+		when(accesoService.esSuperAdmin()).thenReturn(false);
+		when(accesoService.esJefeDeEmpresa()).thenReturn(true);
+		when(profesionalRepository.findById(PROFESIONAL_ID)).thenReturn(Optional.of(profesional()));
+		when(usuarioEmpresaRepository.findByUsuarioId(USUARIO_ID))
+				.thenReturn(List.of(pertenencia()));
+		when(citaRepository.findByProfesionalIdAndEstadoOrderByFechaHoraInicioAsc(
+				PROFESIONAL_ID, EstadoCita.CONFIRMADA))
+				.thenReturn(List.of(cita()));
+
+		List<CitaResponse> citas = citaService.listarCitasConfirmadasPorProfesional(
+				PROFESIONAL_ID, null, null);
+
+		assertEquals(1, citas.size());
+		verify(citaRepository).findByProfesionalIdAndEstadoOrderByFechaHoraInicioAsc(
+				PROFESIONAL_ID, EstadoCita.CONFIRMADA);
+	}
+
+	@Test
 	void rangoInvalidoFalla() {
 		autenticar(roles("JEFE"), List.of(EMPRESA_ID), List.of());
 

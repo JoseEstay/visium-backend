@@ -5,7 +5,7 @@ Stack: **Spring Boot 4.1**, **Java 21**, **PostgreSQL**, **JWT**.
 
 - Rama de trabajo: `desarrollo-backend`
 - Versión actual: **0.2.0** (ver [`CHANGELOG.md`](CHANGELOG.md))
-- Documentación de negocio: [`docs/reglas-negocio.md`](docs/reglas-negocio.md), [`docs/modelamiento-datos.md`](docs/modelamiento-datos.md), [`docs/consultas-clinicas.md`](docs/consultas-clinicas.md)
+- Documentación de negocio: [`docs/reglas-negocio.md`](docs/reglas-negocio.md), [`docs/modelamiento-datos.md`](docs/modelamiento-datos.md)
 
 ## Requisitos locales
 

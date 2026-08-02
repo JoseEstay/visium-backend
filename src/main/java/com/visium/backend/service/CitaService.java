@@ -35,7 +35,10 @@ public class CitaService {
 	@Transactional(readOnly = true)
 	public List<CitaResponse> listarCitasConfirmadasPorProfesional(
 			UUID profesionalId, LocalDate desde, LocalDate hasta) {
-		validarRango(desde, hasta);
+		if (desde != null && hasta != null && hasta.isBefore(desde)) {
+			throw new BadRequestException("El rango de fechas es invalido: hasta no puede ser antes de desde");
+		}
+
 		Profesional profesional = profesionalRepository.findById(profesionalId)
 				.orElseThrow(() -> new ResourceNotFoundException("Profesional no encontrado: " + profesionalId));
 
@@ -43,13 +46,20 @@ public class CitaService {
 		validarProfesional(profesionalId, usuario);
 		validarEmpresaDeProfesional(profesional, usuario);
 
-		Instant inicio = desde.atStartOfDay().toInstant(ZoneOffset.UTC);
-		Instant fin = hasta.atTime(23, 59, 59).toInstant(ZoneOffset.UTC);
+		List<Cita> citas;
+		if (desde == null && hasta == null) {
+			citas = citaRepository.findByProfesionalIdAndEstadoOrderByFechaHoraInicioAsc(
+					profesionalId, EstadoCita.CONFIRMADA);
+		} else {
+			LocalDate inicioReal = desde != null ? desde : LocalDate.of(1970, 1, 1);
+			LocalDate finReal = hasta != null ? hasta : LocalDate.of(9999, 12, 31);
+			Instant inicio = inicioReal.atStartOfDay().toInstant(ZoneOffset.UTC);
+			Instant fin = finReal.atTime(23, 59, 59).toInstant(ZoneOffset.UTC);
+			citas = citaRepository.findByProfesionalIdAndFechaHoraInicioBetweenAndEstado(
+					profesionalId, inicio, fin, EstadoCita.CONFIRMADA);
+		}
 
-		return citaRepository
-				.findByProfesionalIdAndFechaHoraInicioBetweenAndEstado(
-						profesionalId, inicio, fin, EstadoCita.CONFIRMADA)
-				.stream()
+		return citas.stream()
 				.filter(this::tieneAccesoACita)
 				.map(citaMapper::toResponse)
 				.toList();
@@ -61,15 +71,6 @@ public class CitaService {
 			return true;
 		} catch (ForbiddenException ex) {
 			return false;
-		}
-	}
-
-	private void validarRango(LocalDate desde, LocalDate hasta) {
-		if (desde == null || hasta == null) {
-			throw new BadRequestException("Debes indicar desde y hasta para filtrar por semana");
-		}
-		if (hasta.isBefore(desde)) {
-			throw new BadRequestException("El rango de fechas es invalido: hasta no puede ser antes de desde");
 		}
 	}
 

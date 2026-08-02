@@ -26,8 +26,8 @@ public class CitaController {
 	@PreAuthorize("hasAnyRole('SUPER_ADMIN', 'JEFE', 'PROFESIONAL')")
 	public ResponseEntity<List<CitaResponse>> listarCitasConfirmadasPorProfesional(
 			@PathVariable UUID profesionalId,
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate desde,
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta) {
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate desde,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta) {
 		return ResponseEntity.ok(
 				citaService.listarCitasConfirmadasPorProfesional(profesionalId, desde, hasta));
 	}
