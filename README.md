@@ -5,7 +5,7 @@ Stack: **Spring Boot 4.1**, **Java 21**, **PostgreSQL**, **JWT**.
 
 - Rama de trabajo: `desarrollo-backend`
 - Versión actual: **0.2.0** (ver [`CHANGELOG.md`](CHANGELOG.md))
-- Documentación de negocio: [`docs/reglas-negocio.md`](docs/reglas-negocio.md), [`docs/modelamiento-datos.md`](docs/modelamiento-datos.md)
+- Documentación de negocio: [`docs/reglas-negocio.md`](docs/reglas-negocio.md), [`docs/modelamiento-datos.md`](docs/modelamiento-datos.md), [`docs/consultas-clinicas.md`](docs/consultas-clinicas.md)
 
 ## Requisitos locales
 
@@ -38,9 +38,26 @@ Comando:
 ```
 
 Requisitos para la suite completa: PostgreSQL en Docker + `.env` válido.  
-Los tests de `AccesoService` **no** necesitan base de datos.
+Los tests de `AccesoService` y consultas clínicas **no** necesitan base de datos.
 
-### Resultado de la última ejecución (2026-07-29)
+### Verificación consultas clínicas y agenda (2026-07-30)
+
+Comandos ejecutados sin PostgreSQL:
+
+```bash
+bash ./mvnw -q -DskipTests compile
+bash ./mvnw -q -Dtest=AccesoServiceTest,ConsultaServiceTest,ConsultaControllerSecurityTest,CitaServiceTest,CitaControllerSecurityTest test
+```
+
+| Clase | Tests | Resultado | Qué valida |
+|---|---:|---|---|
+| `ConsultaServiceTest` | 2 | OK | Cierre de cita `CONFIRMADA`, creación de consulta y cambio a `ATENDIDA`; rechazo de cita no confirmada |
+| `ConsultaControllerSecurityTest` | 8 | OK | Solo `RECEPCIONISTA` puede cerrar cita; lecturas siguen limitadas a `SUPER_ADMIN`, `JEFE` y `PROFESIONAL` |
+| `CitaServiceTest` | 3 | OK | Agenda de citas `CONFIRMADA` por profesional, rango inválido y profesional limitado a su propia agenda |
+| `CitaControllerSecurityTest` | 5 | OK | Solo `SUPER_ADMIN`, `JEFE` y `PROFESIONAL` acceden a la agenda |
+| `AccesoServiceTest` | 11 | OK | Aislamiento multi-empresa / multi-sucursal |
+
+### Resultado de la última ejecución completa con PostgreSQL (2026-07-29)
 
 ```
 Tests run: 12, Failures: 0, Errors: 0, Skipped: 0

@@ -22,4 +22,11 @@ public interface CitaRepository extends JpaRepository<Cita, UUID> {
 			Instant desde,
 			Instant hasta
 	);
+
+	List<Cita> findByProfesionalIdAndFechaHoraInicioBetweenAndEstado(
+			UUID profesionalId,
+			Instant desde,
+			Instant hasta,
+			EstadoCita estado
+	);
 }
