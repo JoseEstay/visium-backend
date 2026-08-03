@@ -5,6 +5,8 @@ import com.visium.backend.exception.ResourceNotFoundException;
 import com.visium.backend.repository.RecetaOpticaRepository;
 import com.visium.backend.service.RecetaOpticaService;
 import com.visium.backend.service.RecetaPdfService;
+import com.visium.backend.service.EmailService; // <-- 1. ESTA LÍNEA FALTABA
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ public class RecetaOpticaController {
     private final RecetaOpticaRepository recetaOpticaRepository;
     private final RecetaPdfService pdfService;
     private final RecetaOpticaService recetaOpticaService;
+    private final EmailService emailService; // <-- 2. Y ESTA LÍNEA FALTABA
 
     @GetMapping("/paciente/{pacienteId}")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'JEFE', 'PROFESIONAL')")
@@ -31,6 +34,7 @@ public class RecetaOpticaController {
         List<RecetaOptica> historial = recetaOpticaRepository.findHistorialByPacienteId(pacienteId);
         return ResponseEntity.ok(historial);
     }
+
     @GetMapping("/{id}/pdf")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'JEFE', 'RECEPCIONISTA', 'PROFESIONAL')")
     public ResponseEntity<byte[]> descargarPdf(@PathVariable UUID id) {
@@ -51,7 +55,14 @@ public class RecetaOpticaController {
     public ResponseEntity<RecetaOptica> crearReceta(@RequestBody RecetaOptica receta) {
         RecetaOptica nuevaReceta = recetaOpticaService.guardarReceta(receta);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaReceta);
+    }
 
-}
-}
+    @GetMapping("/test-email")
+    public ResponseEntity<String> probarEmail() {
+        String tuCorreo = "cfritzsepulveda8@gmail.com";
 
+        emailService.enviarCorreoPrueba(tuCorreo);
+
+        return ResponseEntity.ok("Intento de envío de correo finalizado. Revisa la consola de Java y tu bandeja de entrada.");
+    }
+}

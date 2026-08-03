@@ -84,4 +84,20 @@ public class EmailService {
             System.err.println("Error enviando correo de receta: " + e.getMessage());
         }
     }
+    public void enviarCorreoPrueba(String tuCorreo) {
+        try {
+            MimeMessage mensaje = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mensaje, true, "UTF-8");
+
+            helper.setTo(tuCorreo); // DEBE ser tu correo registrado en Resend
+            helper.setFrom("onboarding@resend.dev", "Óptica VISIUM");
+            helper.setSubject("Prueba de Integración VISIUM");
+            helper.setText("¡Felicidades! Tu backend en Spring Boot está enviando correos correctamente a través de Resend.");
+
+            mailSender.send(mensaje);
+            System.out.println("¡Correo de prueba enviado con éxito!");
+        } catch (Exception e) {
+            System.err.println("Error enviando correo de prueba: " + e.getMessage());
+        }
+    }
 }
