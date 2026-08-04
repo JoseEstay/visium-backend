@@ -63,7 +63,7 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers("/auth/login")
                     .permitAll()
-                    .requestMatchers("/api-docs", "/docs/**")
+                    .requestMatchers("/api-docs", "/docs/**", "/scalar", "/scalar/**")
                     .permitAll()
                     .requestMatchers(HttpMethod.OPTIONS, "/**")
                     .permitAll()
