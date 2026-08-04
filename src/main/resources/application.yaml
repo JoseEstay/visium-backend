@@ -57,10 +57,3 @@ springdoc:
 scalar:
   enabled: true
   url: http://localhost:8080/api-docs
-  path: /docs
-  theme: default
-  layout: modern
-  darkMode: false
-  hideSearch: false
-  tagSorter: alpha
-  operationSorter: alpha
