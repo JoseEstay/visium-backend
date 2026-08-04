@@ -50,6 +50,10 @@ visium:
     expiration-ms: 86400000
 
 # Documentacion API con Scalar
+springdoc:
+  api-docs:
+    path: /api-docs
+  show-actuator: false
 scalar:
   enabled: true
   url: http://localhost:8080/api-docs
