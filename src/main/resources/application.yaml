@@ -49,12 +49,14 @@ visium:
     # Duracion del token: 24 horas (en milisegundos)
     expiration-ms: 86400000
 
-# Documentacion OpenAPI / Swagger UI
-springdoc:
-  api-docs:
-    path: /api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-    tags-sorter: alpha
-    operations-sorter: alpha
-  show-actuator: false
+# Documentacion API con Scalar
+scalar:
+  enabled: true
+  url: http://localhost:8080/api-docs
+  path: /docs
+  theme: default
+  layout: modern
+  darkMode: false
+  hideSearch: false
+  tagSorter: alpha
+  operationSorter: alpha
